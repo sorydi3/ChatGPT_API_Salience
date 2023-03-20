@@ -11,7 +11,7 @@ try:
 except ImportError:
     print("No module named 'google' found")
 
-openai.api_key = "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"
+openai.api_key = "kq"
  
 class ChatBot:
     def __init__(self, system=""):
