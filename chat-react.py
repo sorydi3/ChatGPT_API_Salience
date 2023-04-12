@@ -81,6 +81,7 @@ RESPONSE FORMAT:
 {
     "thoughts":
     {
+        "anticipation": "anticipate user needs",
         "text": "thought",
         "reasoning": "reasoning",
         "plan": "- short bulleted\n- list that conveys\n- long-term plan",
