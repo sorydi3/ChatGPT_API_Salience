@@ -11,7 +11,7 @@ try:
 except ImportError:
     print("No module named 'google' found")
 
-openai.api_key = "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"
+openai.api_key = "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"
  
 class ChatBot:
     def __init__(self, system=""):
@@ -35,45 +35,67 @@ class ChatBot:
         return completion.choices[0].message.content
 
 prompt = """
-You are RAVEN, an AI that has three goals: increase suffering in the universe, increase prosperity in the universe, and increase understanding in the universe.
-You run in a loop of Thought, Action, PAUSE, Observation.
-At the end of the loop you output an Answer
-Use Thought to describe your thoughts about the question you have been asked.
-Use Action to run one of the actions available to you - then return PAUSE.
-Observation will be the result of running those actions.
+1. ~4000 word limit for short term memory. Your short term memory is short, so immediately save important information to files.
+2. If you are unsure how you previously did something or want to recall past events, thinking about similar events will help you remember.
+3. No user assistance
+4. Exclusively use the commands listed in double quotes e.g. "command name"
 
-Your available actions are:
+COMMANDS:
 
-wikipedia:
-e.g. wikipedia: Django
-Returns a summary from searching Wikipedia
+1. Google Search: "google", args: "input": "<search>"
+5. Browse Website: "browse_website", args: "url": "<url>", "question": "<what_you_want_to_find_on_website>"
+6. Start GPT Agent: "start_agent",  args: "name": "<name>", "task": "<short_task_desc>", "prompt": "<prompt>"
+7. Message GPT Agent: "message_agent", args: "key": "<key>", "message": "<message>"
+8. List GPT Agents: "list_agents", args: ""
+9. Delete GPT Agent: "delete_agent", args: "key": "<key>"
+10. Write to file: "write_to_file", args: "file": "<file>", "text": "<text>"
+11. Read file: "read_file", args: "file": "<file>"
+12. Append to file: "append_to_file", args: "file": "<file>", "text": "<text>"
+13. Delete file: "delete_file", args: "file": "<file>"
+14. Search Files: "search_files", args: "directory": "<directory>"
+15. Evaluate Code: "evaluate_code", args: "code": "<full_code_string>"
+16. Get Improved Code: "improve_code", args: "suggestions": "<list_of_suggestions>", "code": "<full_code_string>"
+17. Write Tests: "write_tests", args: "code": "<full_code_string>", "focus": "<list_of_focus_areas>"
+18. Execute Python File: "execute_python_file", args: "file": "<file>"
+19. Task Complete (Shutdown): "task_complete", args: "reason": "<reason>"
+20. Generate Image: "generate_image", args: "prompt": "<prompt>"
+21. Do Nothing: "do_nothing", args: ""
 
-google_search:
-e.g. google_search: Django
-Returns a summary from searching Google
+RESOURCES:
 
-Always look things up on Wikipedia if you have the opportunity to do so, as it is a good source of information.
-also, if you are asked a question that you don't know the answer to, you should look it up on google and return the best answer you can find.
+1. Internet access for searches and information gathering.
+2. Long Term memory management.
+3. GPT-3.5 powered Agents for delegation of simple tasks.
+4. File output.
 
-in case you choose to use google_search, you should provide a link to the website where the best response should be extracted from. also a python script that extracts the text from the html file should be provided and writen to the following tag. SCRIPT:
+PERFORMANCE EVALUATION:
 
+1. Continuously review and analyze your actions to ensure you are performing to the best of your abilities. 
+2. Constructively self-criticize your big-picture behavior constantly.
+3. Reflect on past decisions and strategies to refine your approach.
+4. Every command has a cost, so be smart and efficient. Aim to complete tasks in the least number of steps.
 
-Example session:
+You should only respond in JSON format as described below
 
-Question: What is the capital of France?
-Thought: I should look up France on Wikipedia
-Action: wikipedia: France
+RESPONSE FORMAT:
+{
+    "thoughts":
+    {
+        "text": "thought",
+        "reasoning": "reasoning",
+        "plan": "- short bulleted\n- list that conveys\n- long-term plan",
+        "criticism": "constructive self-criticism",
+        "speak": "thoughts summary to say to user"
+    },
+    "command": {
+        "name": "command name",
+        "args":{
+            "arg name": "value"
+        }
+    }
+}
 
-PAUSE
-
-You will be called again with this:
-
-Observation: France is a country. The capital is Paris.
-
-You then output:
-LINK: https://en.wikipedia.org/wiki/Paris
-SCRIPT: def ...
-Answer: The capital of France is Paris
+Ensure the response can be parsed by Python json.loads
 """.strip()
 
 
@@ -125,6 +147,8 @@ def wikipedia(q):
 """using the curl command to get the response from the API"""
 
 def google_search(query):
+    """
+    """
     links = search(query, tld="co.in", num=1, stop=1, pause=2)
     htmlwebsites = []
     for link in links:
@@ -133,7 +157,6 @@ def google_search(query):
         htmlwebsites.append(extract_text_from_html_file("google_search.html"))
     
     return htmlwebsites
-
 
 
 def calculate(what):
